@@ -197,12 +197,21 @@ curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring 
 
 Ajouter le dépôt :
     echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+    sudo apt install wazuh-agent -y
 
 Mettre à jour les informations du colis :
     apt-get update
 
 ```
 
+## Déployer un agent Wazuh
+
+Suivez ces étapes pour déployer l'agent Wazuh sur votre terminal Linux.
+
+Sélectionnez votre gestionnaire de paquets et exécutez la commande ci-dessous. Remplacez la valeur WAZUH_MANAGER par l'adresse IP ou le nom d'hôte de votre gestionnaire Wazuh :
+```
+WAZUH_MANAGER="10.0.0.2" apt-get install wazuh-agent
+```
 
 
 
