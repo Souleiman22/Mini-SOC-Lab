@@ -210,8 +210,25 @@ Suivez ces étapes pour déployer l'agent Wazuh sur votre terminal Linux.
 
 Sélectionnez votre gestionnaire de paquets et exécutez la commande ci-dessous. Remplacez la valeur WAZUH_MANAGER par l'adresse IP ou le nom d'hôte de votre gestionnaire Wazuh :
 ```
-WAZUH_MANAGER="10.0.0.2" apt-get install wazuh-agent
+WAZUH_MANAGER="localhost.com" apt-get install wazuh-agent
+
 ```
+
+Étape 2 — Installation de Suricata IDS/IPS sur Kali Linux
+
+📌 Objectif : Installer et configurer Suricata comme IDS/IPS sur Kali Linux, puis l'intégrer avec Wazuh pour centraliser les alertes réseau.
+
+C'est quoi Suricata ?
+Suricata est un moteur open-source de détection d'intrusions réseau (IDS/IPS) qui analyse le trafic en temps réel.
+
+| Fonctionnalité | Description | 
+|----------------|-------------|
+| IDS | Détecte les attaques réseau et génère des alertes |
+| IPS | Bloque activement le trafic malveillant |
+| NSM | Surveillance réseau complète |
+| EVE | JSONFormat de logs compatible avec Wazuh/ELK |
+
+
 
 
 
