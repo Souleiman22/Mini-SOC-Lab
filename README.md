@@ -228,6 +228,28 @@ Suricata est un moteur open-source de détection d'intrusions réseau (IDS/IPS) 
 | NSM | Surveillance réseau complète |
 | EVE | JSONFormat de logs compatible avec Wazuh/ELK |
 
+Rôle dans notre Mini-SOC
+
+Trafic réseau (Nmap, Hydra, attaques)
+            ↓
+      Suricata IDS/IPS          ← installé sur Kali
+      (analyse le trafic)
+            ↓
+      eve.json (logs)
+            ↓
+      Wazuh Agent               ← lit les logs Suricata
+            ↓
+      Wazuh Manager             ← Ubuntu Host
+      (Dashboard + Alertes)
+
+
+Prérequis
+
+Kali Linux avec Wazuh Agent installé et connecté ✅
+Connexion internet ✅
+Interface réseau : eth0 ✅
+
+
 
 
 
