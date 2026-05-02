@@ -246,8 +246,29 @@ Trafic réseau (Nmap, Hydra, attaques)
 Prérequis
 
 Kali Linux avec Wazuh Agent installé et connecté ✅
+
 Connexion internet ✅
+
 Interface réseau : eth0 ✅
+
+Vérifier la version installée
+```
+suricata --version
+```
+
+ 2. Téléchargement des règles de détection
+Les règles permettent à Suricata de reconnaître les attaques connues.
+
+```
+sudo suricata-update
+```
+
+Ces règles proviennent de Emerging Threats — une base de données de signatures d'attaques connues mise à jour régulièrement.
+
+ 3. Configuration de Suricata
+Trouver l'interface réseau active
+
+
 
 
 
