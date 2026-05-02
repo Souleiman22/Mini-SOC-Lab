@@ -268,6 +268,97 @@ Ces règles proviennent de Emerging Threats — une base de données de signatur
  3. Configuration de Suricata
 Trouver l'interface réseau active
 
+```
+ip a | grep "state UP"
+```
+
+Modifier le fichier de configuration
+```
+sudo nano /etc/suricata/suricata.yaml
+
+```
+
+Cherche la section af-packet et vérifie que l'interface est eth0 :
+```
+af-packet:
+  - interface: eth0
+```
+
+Cherche aussi eve-log et vérifie que le format JSON est activé :
+```
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+```
+
+Sauvegarde CTRL+X → Y → Entrée
+
+```
+sudo systemctl enable suricata
+sudo systemctl start suricata
+sudo systemctl status suricata
+```
+
+5. Intégration Suricata → Wazuh
+On ajoute les logs Suricata dans la configuration de l'agent Wazuh pour qu'il les envoie au manager.
+```
+
+sudo nano /var/ossec/etc/ossec.conf
+```
+
+Ajoute avant </ossec_config> :
+
+```
+<localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.json</location>
+  </localfile>
+```
+
+Le fichier doit ressembler à ceci :
+
+```
+<ossec_config>
+  <client>
+    <server>
+      <address>192.168.1.157</address>
+      <port>1514</port>
+      <protocol>tcp</protocol>
+    </server>
+  </client>
+
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/syslog</location>
+  </localfile>
+
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/auth.log</location>
+  </localfile>
+
+  <!-- Suricata IDS logs -->
+  <localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.json</location>
+  </localfile>
+
+</ossec_config>
+
+```
+
+Sauvegarde CTRL+X → Y → Entrée
+Redémarrer l'agent Wazuh
+
+```
+sudo systemctl restart wazuh-agent
+sudo systemctl status wazuh-agent | grep Active
+```
+6. Test — Générer une alerte Suricata
+On va simuler un scan réseau depuis Kali pour vérifier que Suricata détecte l'attaque.
+
 
 
 
