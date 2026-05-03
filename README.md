@@ -1,370 +1,277 @@
-# Étape 0 — Prérequis & Vérification Système
-objectif : verifier que la machine est prete avant d'installer les outils du Mini-SOC.
+🧩 Étape 0 — Prérequis & Vérification Système
+🎯 Objectif
 
-## Environnement utilise
-|composant  | Detail |
+Vérifier que la machine est prête avant d’installer les outils du Mini-SOC.
+
+🖥️ Environnement utilisé
+
+| Composant | Détail |
 |-----------|--------|
-|OS         |Ubuntu 22.04 LTS |
-|RAN        | 16GB   |
-|CPU        | Verifier! |
-|Disque     | Verifier! |
-|Reseau     | Interface Locale(NAT) |
+| OS	| Ubuntu 22.04 LTS |
+| RAM	| 16 GB |
+| CPU |	À vérifier |
+| Disque |	À vérifier |
+| Réseau |	Interface locale (NAT) |
 
-## Verification des ressources systeme
-lancer les commandes suivantes dans le terminal pour confirmer que la machine dispose des ressources minimales requises.
-### RAN disponible
+🔍 Vérification des ressources système
+
+Exécute les commandes suivantes :
 ```
+
 free -h
 df -h /
 lsb_release -a
-```
-<img width="828" height="293" alt="Screenshot from 2026-04-25 13-34-09" src="https://github.com/user-attachments/assets/a034b549-3b2e-4948-b294-b3c8bbe1f4d8" />
 
-## Mise a jour du systeme
 ```
+
+Vérifie :
+
+RAM disponible
+Espace disque
+Version du système
+
+🔄 Mise à jour du système
+```
+
 sudo apt update && sudo apt upgrade -y
+
 ```
-## Installation des outils de base
-Ces outils sont necessaires pour la suite du projet.
+🧰 Installation des outils de base
+
 ```
+
 sudo apt install -y \
-  curl \
-  wget \
-  git \
-  unzip \
-  net-tools \
-  gnupg \
-  lsb-release \
-  ca-certificates \
+  curl wget git unzip net-tools \
+  gnupg lsb-release ca-certificates \
   software-properties-common
+
 ```
-### verification
+
+✔ Vérification
 ```
+
 curl --version
 git --version
 wget --version
-```
 
-## Installation de Docker & Docker Compose
+```
+<img width="748" height="231" alt="Screenshot from 2026-05-04 01-36-08" src="https://github.com/user-attachments/assets/c960d23d-5809-4505-81ec-c730c0a784a3" />
+
+
+🐳 Installation de Docker & Docker Compose
+
 Docker est requis pour déployer TheHive et Cortex.
+
 ```
 
-# installation Docker
+# Installation
 sudo apt install -y docker.io docker-compose
 
-# Active Docker au demarrage
+# Activation
 sudo systemctl enable docker
 sudo systemctl start docker
 
-# Ajouter l'utilisateur  courant au groupe docker
+# Permissions utilisateur
 sudo usermod -aG docker $USER
-
-# Appliquer le changement de groupe (sans redemarrer)
 newgrp docker
+
 ```
-### Verification 
+
+✔ Vérification
+
 ```
+
 docker --version
 docker-compose --version
 docker ps
-```
-### Resultat 
 
-<img width="1595" height="201" alt="Screenshot from 2026-04-25 13-56-57" src="https://github.com/user-attachments/assets/b4752dde-74f7-4247-afca-2c2568bcd01c" />
-
-## installation des outils de simulation d'attaques
-Ces outils servent a simuler des attaques dans un environnement isole et controle.
 ```
+
+<img width="1591" height="147" alt="Screenshot from 2026-05-04 01-38-49" src="https://github.com/user-attachments/assets/cb01fa81-bfee-42b4-a657-d47f250657b0" />
+
+
+⚔️ Outils de simulation d’attaques
+
+```
+
 sudo apt install -y \
-  nmap \
-  hydra \
-  netcat-openbsd
+  nmap hydra netcat-openbsd
+
 ```
-### Vérification
+
+✔ Vérification
+
 ```
+
 nmap --version
 hydra -h | head -5
+
 ```
-## Création de la structure du projet (dans ton dossier existant)
+<img width="907" height="349" alt="Screenshot from 2026-05-04 01-41-20" src="https://github.com/user-attachments/assets/280fb762-cad5-42e4-aaab-d37ed9414856" />
 
-Le projet sera structuré comme suit dans le dossier `~/projets/mini-soc` :
-Créer l'arborescence complète du projet dès maintenant.
-```
-mkdir -p ~/mini-soc-lab/{docs,configs,docker,screenshots,rapport,playbooks}
-cd ~/mini-soc-lab
-git init
-```
-<img width="856" height="229" alt="Screenshot from 2026-04-25 14-28-39" src="https://github.com/user-attachments/assets/d25422bf-f070-4e43-b60c-d17e40108d70" />
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-----------------------------------------------------------------------------------------------------------
-# Etape 1 - Installation de Wazuh(SIEM Central)
-Objectif: Installer Wazuh en mode "tout-en-un"(Manager + Indexer + Dashboard) sur Ubuntu pour centraliser la collecte des logs et la detection des menaces.
+🛡️ Étape 1 — Installation de Wazuh (SIEM Central)
+🎯 Objectif
 
-----------------------------------------------------------------------------------------------------------
-## C'est quoi Wazuh?
-Wazuh est une plateforme open-source de securite qui combine:
+Installer Wazuh en mode tout-en-un pour centraliser :
 
-| Fonctionnalite | Description |
-|----------------|-------------|
-| SIEM           | Collecte et correcle les evenements de securite |
-| XDR            | Detection et reponse sur les endpoints |
-| IDS            | Detection d'intrusions basee sur les logs |
-| FIM            | Surveillance de l'integrite des fichiers |
-| Dashboard      | interface web pour visualiser les alertes |
+>> Logs
+>> Alertes
+>> Détection de menaces
 
-## Architecture Wazuh
-+-------------+
-| Agent Wazuh |
-|             |
-| Ubuntu      |
-| Sysmon      |
-+-------------+
-      |
-      |
-      |
-+----------------------+
-| Wazuh Manager        |
-| (Collecte & analyse  |
-|   des logs/alertes)  |
-+----------------------+
-              |
-              |
-              |
- +-----------------------+
- |  Wazuh Indexer        |
- |  (OpenSearch          |
- |   stockage des logs)  |
- +----------┬------------+
-            |
-            ▼
- +----------------------+
-|   Wazuh Dashboard     |
-|  (Interface Kibana‑   |
-|  based, visualisation)|
-+-----------------------+
+Qu’est-ce que Wazuh ?
 
-Wazuh est une plateforme de sécurité offrant une protection XDR et SIEM unifiée pour les terminaux et les charges de travail cloud. La solution se compose de l'agent Wazuh et de trois composants principaux : le serveur Wazuh, l'indexeur Wazuh et le tableau de bord Wazuh. Pour plus d'informations, consultez la documentation « Premiers pas ».
+Plateforme open-source combinant :
 
-Wazuh est gratuit et open source. Ses composants sont distribués sous licence GNU GPL v2 et Apache v2.0 (ALv2).
+| Fonction | Description |
+|----------|-------------|
+| SIEM | Collecte & corrélation des événements |
+| XDR	| Détection & réponse endpoint |
+| IDS	| Détection d’intrusion |
+| FIM	| Surveillance des fichiers |
+| Dashboard |	Interface web |
 
-Vous pouvez installer l'indexeur Wazuh, le serveur Wazuh et le tableau de bord Wazuh sur un seul hôte ou les répartir en cluster. Chaque composant central de Wazuh propose deux méthodes d'installation, chacune fournissant des instructions pour l'installation sur un seul hôte ou sur des hôtes distincts.
-
-Pour une installation tout-en-un, consultez notre documentation de démarrage rapide. C'est la méthode la plus rapide pour mettre en service les composants centraux de Wazuh.
-
-Pour plus de flexibilité et de personnalisation, installez les composants centraux de Wazuh en commençant par le déploiement de l'indexeur. Cette méthode prend en charge l'installation tout-en-un et l'installation des composants sur des hôtes distincts.
-
-Suivez ce processus d'installation :
-```
-## Wazuh indexer
-## Wazuh server
-## Wazuh dashboard
-
-### Configuration requise
-
-Vérifiez les systèmes d'exploitation compatibles et la configuration matérielle recommandée pour l'installation de l'indexeur Wazuh. Assurez-vous que votre environnement système répond à toutes les exigences et que vous disposez des privilèges d'administrateur.
-
-Systèmes d'exploitation recommandés
-
-L'indexeur Wazuh nécessite un processeur Linux 64 bits Intel, AMD ou ARM (architecture x86_64/AMD64 ou AARCH64/ARM64) pour fonctionner. Wazuh prend en charge les versions suivantes :
-
-Amazon Linux 2, Amazon Linux 2023
-
-CentOS Stream 10
-
-Red Hat Enterprise Linux 7, 8, 9, 10
-
-Ubuntu 16.04, 18.04, 20.04, 22.04, 24.04
-```
-L'agent Wazuh est un logiciel de surveillance unique et léger. Ce composant multiplateforme peut être déployé sur ordinateurs portables, ordinateurs de bureau, serveurs, instances cloud, conteneurs ou machines virtuelles. Il offre une visibilité sur le terminal surveillé en collectant les enregistrements système et applicatifs critiques, les données d'inventaire et en détectant les anomalies potentielles.
-
-Sélectionnez le système d'exploitation de votre terminal ci-dessous et suivez les étapes d'installation pour déployer l'agent Wazuh.
-
-link : https://documentation.wazuh.com/current/installation-guide/index.html
-
-
-<img width="1222" height="240" alt="Screenshot from 2026-04-27 07-42-53" src="https://github.com/user-attachments/assets/b49a1083-a351-4812-b527-b3bd4f77b5d4" />
-
-## Deploying Wazuh agents on Linux endpoints
-```
-Ajoutez le dépôt Wazuh pour télécharger les paquets officiels.
-
-Installez les paquets suivants s'ils sont manquants :
-apt-get install gnupg apt-transport-https
-
-Installez la clé GPG :
-curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
-
-Ajouter le dépôt :
-    echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
-    sudo apt install wazuh-agent -y
-
-Mettre à jour les informations du colis :
-    apt-get update
+🏗️ Architecture Wazuh
 
 ```
 
-## Déployer un agent Wazuh
+Agent → Manager → Indexer → Dashboard
 
-Suivez ces étapes pour déployer l'agent Wazuh sur votre terminal Linux.
+```
 
-Sélectionnez votre gestionnaire de paquets et exécutez la commande ci-dessous. Remplacez la valeur WAZUH_MANAGER par l'adresse IP ou le nom d'hôte de votre gestionnaire Wazuh :
+Agent : collecte des logs
+Manager : analyse
+Indexer (OpenSearch) : stockage
+Dashboard : visualisation
+
+⚙️ Configuration requise
+
+✔ CPU 64 bits (Intel / AMD / ARM)
+✔ OS supportés :
+
+Ubuntu 16.04 → 24.04
+CentOS / RHEL / Amazon Linux
+
+🔗 Installation de l’agent Wazuh
+Ajouter le dépôt
+
+```
+
+sudo apt-get install gnupg apt-transport-https
+
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | \
+gpg --no-default-keyring \
+--keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import
+
+chmod 644 /usr/share/keyrings/wazuh.gpg
+
+sudo apt update
+sudo apt install wazuh-agent -y
+
+```
+
+🚀 Déploiement de l’agent
+
 ```
 WAZUH_MANAGER="localhost.com" apt-get install wazuh-agent
 
 ```
 
-Étape 2 — Installation de Suricata IDS/IPS sur Kali Linux
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Étape 2 — Installation de Suricata (IDS/IPS)
+🎯 Objectif
 
-📌 Objectif : Installer et configurer Suricata comme IDS/IPS sur Kali Linux, puis l'intégrer avec Wazuh pour centraliser les alertes réseau.
+Installer Suricata sur Kali Linux et l’intégrer avec Wazuh.
 
-C'est quoi Suricata ?
-Suricata est un moteur open-source de détection d'intrusions réseau (IDS/IPS) qui analyse le trafic en temps réel.
-
-| Fonctionnalité | Description | 
-|----------------|-------------|
-| IDS | Détecte les attaques réseau et génère des alertes |
-| IPS | Bloque activement le trafic malveillant |
-| NSM | Surveillance réseau complète |
-| EVE | JSONFormat de logs compatible avec Wazuh/ELK |
-
-Rôle dans notre Mini-SOC
-
-Trafic réseau (Nmap, Hydra, attaques)
-            ↓
-      Suricata IDS/IPS          ← installé sur Kali
-      (analyse le trafic)
-            ↓
-      eve.json (logs)
-            ↓
-      Wazuh Agent               ← lit les logs Suricata
-            ↓
-      Wazuh Manager             ← Ubuntu Host
-      (Dashboard + Alertes)
+Qu’est-ce que Suricata ?
 
 
-Prérequis
+| Fonction |	Description |
+|----------|--------------| 
+| IDS |	Détection d’attaques |
+| IPS	| Blocage du trafic |
+| NSM	| Surveillance réseau |
+| EVE |	Logs JSON compatibles |
 
-Kali Linux avec Wazuh Agent installé et connecté ✅
 
-Connexion internet ✅
+🔄 Flux dans le Mini-SOC
 
-Interface réseau : eth0 ✅
 
-Vérifier la version installée
+```
+Attaque → Suricata → Logs (eve.json)
+        → Wazuh Agent → Manager → Dashboard
+```
+
+⚙️ Prérequis
+
+✔ Kali Linux
+✔ Agent Wazuh installé
+✔ Interface réseau : eth0
+
+🔎 Vérification
+
 ```
 suricata --version
 ```
 
- 2. Téléchargement des règles de détection
-Les règles permettent à Suricata de reconnaître les attaques connues.
+
+<img width="907" height="98" alt="Screenshot from 2026-05-04 01-56-24" src="https://github.com/user-attachments/assets/87a4934f-2943-487c-abfd-4d9f3cd0ac87" />
+
+📥 Mise à jour des règles
 
 ```
 sudo suricata-update
 ```
 
-Ces règles proviennent de Emerging Threats — une base de données de signatures d'attaques connues mise à jour régulièrement.
+⚙️ Configuration
+Interface réseau
 
- 3. Configuration de Suricata
-Trouver l'interface réseau active
-
-```
 ip a | grep "state UP"
+
+Modifier :
+
 ```
 
-Modifier le fichier de configuration
-```
 sudo nano /etc/suricata/suricata.yaml
 
-```
-
-Cherche la section af-packet et vérifie que l'interface est eth0 :
-```
 af-packet:
   - interface: eth0
-```
 
-Cherche aussi eve-log et vérifie que le format JSON est activé :
-```
-outputs:
-  - eve-log:
-      enabled: yes
-      filetype: regular
-      filename: eve.json
-```
+Activation des logs JSON
 
-Sauvegarde CTRL+X → Y → Entrée
+# Démarrage
 
-```
 sudo systemctl enable suricata
 sudo systemctl start suricata
-sudo systemctl status suricata
+
+
 ```
 
-5. Intégration Suricata → Wazuh
-On ajoute les logs Suricata dans la configuration de l'agent Wazuh pour qu'il les envoie au manager.
+🔗 Intégration avec Wazuh
+
 ```
 
 sudo nano /var/ossec/etc/ossec.conf
-```
 
-Ajoute avant </ossec_config> :
+```
+Ajouter:
 
 ```
 <localfile>
-    <log_format>json</log_format>
-    <location>/var/log/suricata/eve.json</location>
-  </localfile>
+  <log_format>json</log_format>
+  <location>/var/log/suricata/eve.json</location>
+</localfile>
 ```
 
-Le fichier doit ressembler à ceci :
-
-```
-<ossec_config>
-  <client>
-    <server>
-      <address>192.168.1.157</address>
-      <port>1514</port>
-      <protocol>tcp</protocol>
-    </server>
-  </client>
-
-  <localfile>
-    <log_format>syslog</log_format>
-    <location>/var/log/syslog</location>
-  </localfile>
-
-  <localfile>
-    <log_format>syslog</log_format>
-    <location>/var/log/auth.log</location>
-  </localfile>
-
-  <!-- Suricata IDS logs -->
-  <localfile>
-    <log_format>json</log_format>
-    <location>/var/log/suricata/eve.json</location>
-  </localfile>
-
-</ossec_config>
-
-```
-
-Sauvegarde CTRL+X → Y → Entrée
-Redémarrer l'agent Wazuh
+🔄 Redémarrage
 
 ```
 sudo systemctl restart wazuh-agent
-sudo systemctl status wazuh-agent | grep Active
 ```
-6. Test — Générer une alerte Suricata
-On va simuler un scan réseau depuis Kali pour vérifier que Suricata détecte l'attaque.
 
-
-
-
-
-
-
+🧪 Test
 
 
 
