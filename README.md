@@ -295,6 +295,9 @@ sudo hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.157 -t 4
 <img width="1805" height="967" alt="Screenshot from 2026-05-04 03-00-11" src="https://github.com/user-attachments/assets/c96e12bd-914c-44e2-9bf7-eab3cc29967f" />
 
 
+```
+sudo systemctl start wazuh-manager wazuh-indexer wazuh-dashboard
+```
 
 
 
