@@ -344,7 +344,10 @@ sudo docker compose up -d
  <img width="902" height="257" alt="Screenshot from 2026-05-04 11-08-04" src="https://github.com/user-attachments/assets/d7a91bb4-3a13-424c-8472-e133a9ea7a1e" />
 
 
+ <img width="1798" height="334" alt="Screenshot from 2026-05-04 13-34-58" src="https://github.com/user-attachments/assets/cc45287e-034b-4409-88bb-fab8c2170abd" />
+
  
+
 
 
 
