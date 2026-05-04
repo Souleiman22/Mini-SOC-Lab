@@ -295,9 +295,60 @@ sudo hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.157 -t 4
 <img width="1805" height="967" alt="Screenshot from 2026-05-04 03-00-11" src="https://github.com/user-attachments/assets/c96e12bd-914c-44e2-9bf7-eab3cc29967f" />
 
 
+🚀 Installation TheHive + Cortex sur Kali
+
 ```
-sudo systemctl start wazuh-manager wazuh-indexer wazuh-dashboard
+sudo apt install docker-ce-cli && sudo apt install docker-cli && sudo apt install podman-docker
 ```
+
+```
+docker --version
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+podman version 5.8.1
+
+docker compose version
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+Docker Compose version 2.40.3-3
+
+
+```
+🔍 Pourquoi Docker pour TheHive + Cortex ?
+Sans Docker — problème
+TheHive + Cortex ont besoin de :
+
+
+```
+
+- Java 11
+- Cassandra (base de données)
+- Elasticsearch (moteur de recherche)
+- TheHive (application)
+- Cortex (analyseur)
+```
+
+Lance maintenant
+
+```
+mkdir -p ~/thehive && cd ~/thehive
+```
+Démarrer Podman daemon
+```
+sudo systemctl start podman
+sudo systemctl enable podman
+sudo docker compose up -d
+```
+ installation en cours :<img width="902" height="169" alt="Screenshot from 2026-05-04 11-04-34" src="https://github.com/user-attachments/assets/a8046f63-90e4-46d4-acdd-f57a677fdcdb" />
+
+ <img width="902" height="257" alt="Screenshot from 2026-05-04 11-08-04" src="https://github.com/user-attachments/assets/d7a91bb4-3a13-424c-8472-e133a9ea7a1e" />
+
+
+ 
+
+
+
+
 
 
 
