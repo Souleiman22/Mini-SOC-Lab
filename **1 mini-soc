@@ -1,0 +1,37 @@
+=========================================
+      RAPPORT DE STAGE - MINI-SOC
+=========================================
+
+Nom : Souleiman Guedi Harreh
+Date : 18 Mai 2026
+Tuteur : Mr Chireh
+
+=========================================
+OBJECTIF DU PROJET
+=========================================
+
+L'objectif de ce projet est de mettre en place 
+un Mini-SOC (Security Operations Center) fonctionnel.
+
+Un SOC est un centre de surveillance de la sécurité 
+informatique. Il permet de :
+- Collecter les logs des machines du réseau
+- Détecter les comportements suspects
+- Investiguer les incidents de sécurité
+
+=========================================
+ARCHITECTURE MISE EN PLACE
+=========================================
+
+Machine hôte : Ubuntu 24.04
+Hyperviseur : VMware Workstation Pro 25H2
+Machine surveillée : Windows 10 (VM)
+
+Outils déployés :
+- Wazuh 4.9.2 : SIEM (collecte et analyse des logs)
+- DFIR-IRIS : Plateforme d'investigation des incidents
+
+=========================================
+ÉTAPES DE L'INSTALLATION
+=========================================
+
