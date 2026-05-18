@@ -35,3 +35,36 @@ Outils déployés :
 ÉTAPES DE L'INSTALLATION
 =========================================
 
+=========================================
+ÉTAPE 1 : TÉLÉCHARGEMENT DE WAZUH DOCKER
+=========================================
+
+Date : 18 Mai 2026
+
+Description :
+Téléchargement des fichiers de configuration 
+Wazuh depuis GitHub via la commande git clone.
+
+On utilise la version single-node car c'est un 
+environnement de lab (une seule machine).
+En production on utiliserait multi-node pour 
+la haute disponibilité.
+
+Commande utilisée :
+```
+git clone https://github.com/wazuh/wazuh-docker.git
+```
+
+```
+git clone https://github.com/wazuh/wazuh-docker.git
+Cloning into 'wazuh-docker'...
+remote: Enumerating objects: 17604, done.
+remote: Counting objects: 100% (1143/1143), done.
+remote: Compressing objects: 100% (268/268), done.
+remote: Total 17604 (delta 1030), reused 901 (delta 874), pack-reused 16461 (from 3)
+Receiving objects: 100% (17604/17604), 7.42 MiB | 1.85 MiB/s, done.
+Resolving deltas: 100% (9652/9652), done
+
+```
+
+
