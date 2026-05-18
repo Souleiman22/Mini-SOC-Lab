@@ -52,19 +52,78 @@ la haute disponibilité.
 
 Commande utilisée :
 ```
-git clone https://github.com/wazuh/wazuh-docker.git
+git clone https://github.com/wazuh/wazuh-docker.git -b v4.13.0
 ```
 
 ```
-git clone https://github.com/wazuh/wazuh-docker.git
+git clone https://github.com/wazuh/wazuh-docker.git -b v4.13.0
 Cloning into 'wazuh-docker'...
 remote: Enumerating objects: 17604, done.
-remote: Counting objects: 100% (1143/1143), done.
+remote: Counting objects: 100% (1146/1146), done.
 remote: Compressing objects: 100% (268/268), done.
-remote: Total 17604 (delta 1030), reused 901 (delta 874), pack-reused 16461 (from 3)
-Receiving objects: 100% (17604/17604), 7.42 MiB | 1.85 MiB/s, done.
-Resolving deltas: 100% (9652/9652), done
+remote: Total 17604 (delta 1035), reused 904 (delta 877), pack-reused 16458 (from 3)
+Receiving objects: 100% (17604/17604), 7.41 MiB | 312.00 KiB/s, done.
+Resolving deltas: 100% (9656/9656), done.
+Note: switching to '3cf3c541d0caf8fc544d33ce8e0e3fb83dc7f61c'.
+
 
 ```
+```
+cd wazuh-docker/
+soule-sec@sgsec:~/projets/minisoc/wazuh-docker$ ls
+build-docker-images  LICENSE     SECURITY.md  VERSION.json
+CHANGELOG.md         multi-node  single-node  wazuh-agent
+docs                 README.md   tools
+soule-sec@sgsec:~/projets/minisoc/wazuh-docker$ 
+```
+Le dossier wazuh-docker contient deux modes 
+d'installation :
+
+- single-node : un seul serveur (notre choix 
+  car c'est un lab)
+- multi-node : plusieurs serveurs en cluster 
+  (utilisé en entreprise pour la redondance)
+
+Nous utilisons single-node car notre objectif 
+est un environnement de démonstration.
+
+docker-compose -f generate-indexer-certs.yml run --rm generator
+Creating network "single-node_default" with the default driver
+Pulling generator (wazuh/wazuh-certs-generator:0.0.2)...
+0.0.2: Pulling from wazuh/wazuh-certs-generator
+7ce91ec7d1d3: Pull complete
+d7003467fd14: Pull complete
+5249716d429c: Pull complete
+17d0386c2fff: Pull complete
+Digest: sha256:88c4b30ad9b8320ba29f0a891761ad8000866c15c844d27b04974f5cb427c8f0
+Status: Downloaded newer image for wazuh/wazuh-certs-generator:0.0.2
+Creating single-node_generator_run ... done
+The tool to create the certificates exists in the in Packages bucket
+18/05/2026 12:16:30 INFO: Generating the root certificate.
+18/05/2026 12:16:31 INFO: Generating Admin certificates.
+18/05/2026 12:16:31 INFO: Admin certificates created.
+18/05/2026 12:16:31 INFO: Generating Wazuh indexer certificates.
+18/05/2026 12:16:31 INFO: Wazuh indexer certificates created.
+18/05/2026 12:16:31 INFO: Generating Filebeat certificates.
+18/05/2026 12:16:31 INFO: Wazuh Filebeat certificates created.
+18/05/2026 12:16:31 INFO: Generating Wazuh dashboard certificates.
+18/05/2026 12:16:31 INFO: Wazuh dashboard certificates created.
+Moving created certificates to the destination directory
+Changing certificate permissions
+Setting UID indexer and dashboard
+Setting UID for wazuh manager and worker
+
+
+Résultat de la génération des certificats SSL :
+- Certificat root (autorité de certification)
+- Certificat Admin
+- Certificat Wazuh Indexer
+- Certificat Filebeat
+- Certificat Wazuh Dashboard
+
+Tous les certificats ont été créés et placés 
+dans les bons dossiers automatiquement.
+
+
 
 
