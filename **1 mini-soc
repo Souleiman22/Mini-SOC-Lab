@@ -124,6 +124,21 @@ Résultat de la génération des certificats SSL :
 Tous les certificats ont été créés et placés 
 dans les bons dossiers automatiquement.
 
+3.4 DÉMARRAGE DE WAZUH
+    -----------------------
+    Commande : docker-compose up -d
+    
+    Résultat : 3 services démarrés avec succès
+    
+    - wazuh.manager  : Up - Port 1514/1515 
+      (réception des agents)
+    - wazuh.indexer  : Up - Port 9200 
+      (base de données)
+    - wazuh.dashboard: Up - Port 443 
+      (interface web)
+
+<img src="
+
 
 
 
